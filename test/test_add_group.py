@@ -8,12 +8,12 @@ from fixture.application import Application
 from fixture.session import SessionHelper
 
 
-@pytest.fixture(scope='session')
-def app(request):
-    fixture = Application()
-    fixture.session.check_tabs()
-    request.addfinalizer(fixture.destroy)
-    return fixture
+# @pytest.fixture(scope='session')
+# def app(request):
+#     fixture = Application()
+#     fixture.session.check_tabs()
+#     request.addfinalizer(fixture.destroy)
+#     return fixture
 
 
 def test_login(app):  # Log in testing

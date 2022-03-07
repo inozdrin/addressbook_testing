@@ -28,9 +28,28 @@ class GroupHelper:
         self.wd.find_element(By.NAME, 'group_footer').send_keys(new_group.footer)
         self.wd.find_element(By.NAME, 'submit').click()
 
-    def delete_first_group(self):
+    def select_first_group(self):
         self.wd.find_element(By.NAME, "selected[]").click()
+
+
+    def modify_group(self, name, header, footer):
+        mod_group = Group(name, header, footer)
+        self.wd.find_element(By.NAME, 'edit').click()
+        self.wd.find_element(By.NAME, 'group_name').click()
+        self.wd.find_element(By.NAME, 'group_name').clear()
+        self.wd.find_element(By.NAME, 'group_name').send_keys(mod_group.name)
+        self.wd.find_element(By.NAME, 'group_header').click()
+        self.wd.find_element(By.NAME, 'group_header').clear()
+        self.wd.find_element(By.NAME, 'group_header').send_keys(mod_group.header)
+        self.wd.find_element(By.NAME, 'group_footer').click()
+        self.wd.find_element(By.NAME, 'group_footer').clear()
+        self.wd.find_element(By.NAME, 'group_footer').send_keys(mod_group.footer)
+        self.wd.find_element(By.NAME, 'update').click()
+
+    def delete_first_group(self):
+        self.select_first_group()
         self.wd.find_element(By.NAME, "delete").click()
+        self.open_groups_page()
 
     def get_groups_list(self):
         group_list = self.wd.find_elements(By.NAME, "selected[]")

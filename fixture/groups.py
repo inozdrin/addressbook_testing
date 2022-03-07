@@ -14,36 +14,31 @@ class GroupHelper:
         wd = self.wd
         wd.find_element(By.LINK_TEXT, 'groups').click()
 
-    def create_group(self, name, header, footer):
-        new_group = Group(name, header, footer)
+    def create_group(self, group_obj):
+
         self.wd.find_element(By.NAME, 'new').click()
-        self.wd.find_element(By.NAME, 'group_name').click()
-        self.wd.find_element(By.NAME, 'group_name').clear()
-        self.wd.find_element(By.NAME, 'group_name').send_keys(new_group.name)
-        self.wd.find_element(By.NAME, 'group_header').click()
-        self.wd.find_element(By.NAME, 'group_header').clear()
-        self.wd.find_element(By.NAME, 'group_header').send_keys(new_group.header)
-        self.wd.find_element(By.NAME, 'group_footer').click()
-        self.wd.find_element(By.NAME, 'group_footer').clear()
-        self.wd.find_element(By.NAME, 'group_footer').send_keys(new_group.footer)
+        self.fill_group_form(group_obj)
         self.wd.find_element(By.NAME, 'submit').click()
+
+    def fill_group_form(self, group_obj):
+        """"Check fields if we do not need to modify all fields"""
+        self.check_mod_field("group_name", group_obj.name)
+        self.check_mod_field("group_header", group_obj.header)
+        self.check_mod_field('group_footer', group_obj.footer)
+
+    def check_mod_field(self, field_name, text):
+        if text is not None:
+            self.wd.find_element(By.NAME, field_name).click()
+            self.wd.find_element(By.NAME, field_name).clear()
+            self.wd.find_element(By.NAME, field_name).send_keys(text)
 
     def select_first_group(self):
         self.wd.find_element(By.NAME, "selected[]").click()
 
 
-    def modify_group(self, name, header, footer):
-        mod_group = Group(name, header, footer)
+    def modify_group(self, group_obj):
         self.wd.find_element(By.NAME, 'edit').click()
-        self.wd.find_element(By.NAME, 'group_name').click()
-        self.wd.find_element(By.NAME, 'group_name').clear()
-        self.wd.find_element(By.NAME, 'group_name').send_keys(mod_group.name)
-        self.wd.find_element(By.NAME, 'group_header').click()
-        self.wd.find_element(By.NAME, 'group_header').clear()
-        self.wd.find_element(By.NAME, 'group_header').send_keys(mod_group.header)
-        self.wd.find_element(By.NAME, 'group_footer').click()
-        self.wd.find_element(By.NAME, 'group_footer').clear()
-        self.wd.find_element(By.NAME, 'group_footer').send_keys(mod_group.footer)
+        self.fill_group_form(group_obj)
         self.wd.find_element(By.NAME, 'update').click()
 
     def delete_first_group(self):

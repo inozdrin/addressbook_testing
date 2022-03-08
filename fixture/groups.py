@@ -14,6 +14,8 @@ class GroupHelper:
         wd = self.wd
         wd.find_element(By.LINK_TEXT, 'groups').click()
 
+        #.admin > a: nth - child(1)
+
     def create_group(self, group_obj):
 
         self.wd.find_element(By.NAME, 'new').click()

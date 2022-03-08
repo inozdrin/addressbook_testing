@@ -18,13 +18,12 @@ class Application:
         self.contact = ContactHelper(self)
         self.group = GroupHelper(self)
 
-
-        # if not (wd.current_url.endswith("/group.php") and len(wd.find_elements(By.NAME, "new")) > 0):
-        #   wd.find_element(By.LINK_TEXT, "groups").click()
-
-
-
-
+    def is_valid(self):
+        try:
+            self.wd.current_url
+            return True
+        except:
+            return False
 
     def destroy(self):
         self.wd.quit()

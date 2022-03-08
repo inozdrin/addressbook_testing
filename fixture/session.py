@@ -17,6 +17,9 @@ class SessionHelper:
         homepage_url = 'http://localhost/addressbook/'
         self.app.wd.get(homepage_url)
 
+    def go_to_start_page(self):
+        self.app.wd.find_element(By.CSS_SELECTOR, "#nav > ul:nth-child(1) > li:nth-child(1) > a:nth-child(1)").click()
+
     def check_tabs(self):  # Checking if Chrome Settings  Tab opens when browser starts
 
         if len(self.app.wd.window_handles) > 1:
@@ -44,6 +47,8 @@ class SessionHelper:
 
     def logout(self):
         self.app.wd.find_element(By.CSS_SELECTOR, '.header > a:nth-child(3)').click()
+        #.header > a: nth - child(3)
+        #.header > a: nth - child(3)
         # self.app.wd.quit()
 
     def destroy_session(self):

@@ -3,7 +3,7 @@
 # -- coding = "utf-8" ---
 from selenium.webdriver.common.by import By
 
-# from fixture.application import Application
+
 """ 
 The major fixture app contains link to initialized webdriver
 """
@@ -31,25 +31,48 @@ class SessionHelper:
         else:
             pass
 
-    def login(self):
+    def login(self, username, password):
         self.open_home_page()
-        username = self.app.wd.find_element(By.NAME, 'user')
+        username_fld = self.app.wd.find_element(By.NAME, 'user')
 
-        username.click()
-        username.clear()
-        username.send_keys('admin')
-        password = self.app.wd.find_element(By.NAME, 'pass')
-        password.click()
-        password.clear()
-        password.send_keys('secret')
+        username_fld.click()
+        username_fld.clear()
+        username_fld.send_keys(username)
+        password_fld = self.app.wd.find_element(By.NAME, 'pass')
+        password_fld.click()
+        password_fld.clear()
+        password_fld.send_keys(password)
         login_btn = self.app.wd.find_element(By.CSS_SELECTOR, 'input[type="submit"]')
         login_btn.click()
 
     def logout(self):
-        self.app.wd.find_element(By.CSS_SELECTOR, '.header > a:nth-child(3)').click()
-        #.header > a: nth - child(3)
-        #.header > a: nth - child(3)
+        # self.app.wd.find_element(By.CSS_SELECTOR, '.header > a:nth-child(3)').click()
+
+        self.app.wd.find_element(By.LINK_TEXT, "Logout").click()
+        # .header > a: nth - child(3)
+        # .header > a: nth - child(3)
         # self.app.wd.quit()
+
+    def logged_in_as(self, username):  # Check - logged in the right user
+        u_name = self.app.wd.find_element(By.CSS_SELECTOR, '.header > b:nth-child(2)').text
+        print(u_name + "  " + username)
+        return u_name == '(' + username + ')'
+
+    def ensure_login(self, username, password):
+        # Checking log in under right username and re-login if needed
+        if self.is_logged_in():
+            if self.logged_in_as(username):
+                return
+            else:
+                self.logout()
+        self.login(username, password)
+
+    def ensure_logout(self):
+        if self.is_logged_in():
+            self.logout()
+
+    def is_logged_in(self):  # Check the presence of Logout element. Returns true or False
+        return len(self.app.wd.find_elements(By.LINK_TEXT, "Logout")) > 0
 
     def destroy_session(self):
         self.app.wd.quit()

@@ -18,11 +18,5 @@ def test_add_group(app):
     app.group.create_group(Group(name='new1', header='new1_header', footer='new1_footer'))
 
 
-def test_delete_group(app):
-    app.session.go_to_start_page()
-    app.group.open_groups_page()
-    app.group.delete_first_group()
-
-
 def test_add_contact(app):
     app.contact.create_contact(first_name='111qw', last_name='1111er', home_phone='00000123')

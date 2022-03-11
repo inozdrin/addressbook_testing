@@ -14,7 +14,8 @@ class GroupHelper:
         wd = self.wd
         wd.find_element(By.LINK_TEXT, 'groups').click()
 
-        #.admin > a: nth - child(1)
+    def count(self): # Count how many groups on the group page, returns number
+        return len(self.wd.find_elements(By.NAME, 'selected[]'))
 
     def create_group(self, group_obj):
 

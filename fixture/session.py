@@ -3,7 +3,6 @@
 # -- coding = "utf-8" ---
 from selenium.webdriver.common.by import By
 
-
 """ 
 The major fixture app contains link to initialized webdriver
 """
@@ -54,9 +53,11 @@ class SessionHelper:
         # self.app.wd.quit()
 
     def logged_in_as(self, username):  # Check - logged in the right user
-        u_name = self.app.wd.find_element(By.CSS_SELECTOR, '.header > b:nth-child(2)').text
-        print(u_name + "  " + username)
-        return u_name == '(' + username + ')'
+        u_name = self.get_logged_user()
+        return u_name == '%s' % username
+
+    def get_logged_user(self):
+        return self.app.wd.find_element(By.CSS_SELECTOR, '.header > b:nth-child(2)').text[1:-1]
 
     def ensure_login(self, username, password):
         # Checking log in under right username and re-login if needed

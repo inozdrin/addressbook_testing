@@ -51,9 +51,7 @@ class GroupHelper:
     def modify_group(self, group_obj):
         self.wd.find_element(By.NAME, 'edit').click()
         self.fill_group_form(group_obj)
-        time.sleep(20)
         self.wd.find_element(By.NAME, 'update').click()
-        time.sleep(20)
         self.group_cache = None
 
     def modify_group_by_index(self, index, new_group_data):

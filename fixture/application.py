@@ -13,7 +13,7 @@ from fixture.groups import GroupHelper
 class Application:
     def __init__(self):
         self.wd = webdriver.Chrome(executable_path="C:\\Chromedriver\\chromedriver.exe")
-        #self.wd.implicitly_wait(10)
+        # self.wd.implicitly_wait(10)
         self.session = SessionHelper(self)
         self.contact = ContactHelper(self)
         self.group = GroupHelper(self)
@@ -27,3 +27,7 @@ class Application:
 
     def destroy(self):
         self.wd.quit()
+
+    def swithch(self):
+        alert_obj = self.wd.switch_to.alert
+        alert_obj.accept()

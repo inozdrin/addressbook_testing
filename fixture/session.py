@@ -27,6 +27,7 @@ class SessionHelper:
             self.app.wd.switch_to.window(chrome_sett_tab)
             self.app.wd.close()
             self.app.wd.switch_to.window(current_window)
+            self.app.wd.maximize_window()
         else:
             pass
 

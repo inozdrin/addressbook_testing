@@ -1,10 +1,21 @@
 # -- author: Igor Nozdrin --
 # -- Created by Igor at 3/2/2022 --
 # -- coding = "utf-8" ---
+import re
 import time
 
 from selenium.webdriver.common.by import By
 from model.contact import Contact
+
+
+def split_phones(phones):
+    phone_list = list(phones.splitlines())
+    final_list_phones = [""] * 4
+    index = 0
+    for item in phone_list:
+        final_list_phones[index] = phone_list[index]
+        index += 1
+    return final_list_phones
 
 
 class ContactHelper:
@@ -51,18 +62,27 @@ class ContactHelper:
             self.contact_cache = []
             list_of_rows = wd.find_elements(By.NAME, 'entry')
             for row in list_of_rows:
-                firstname = row.find_element(By.CSS_SELECTOR, "td:nth-child(3)").text
+                cells = row.find_elements(By.TAG_NAME, "td")
+                id = cells[0].find_element(By.TAG_NAME, "input").get_attribute("value")
+                # print(id)
+                firstname = cells[2].text
                 # print("First name: " + firstname + "/n")  #  td:nth-child(3)
-                lastname = row.find_element(By.CSS_SELECTOR, "td:nth-child(2)").text
+                lastname = cells[1].text
                 # print("Last Name: " + lastname + "/n")
-                homephone = row.find_element(By.CSS_SELECTOR, "td:nth-child(6)").text
+                ph = cells[5].text
+                # print("PHONES FROM CELL: " + ph + str(type(ph)))
+                all_phones_list = split_phones(ph)
                 # print("Home phone: " + homephone + "/n")
-                email = row.find_element(By.CSS_SELECTOR, "td:nth-child(5) > a:nth-child(1)").text
+                email = cells[4].text
                 # print("Email: " + email)  #  td:nth-child(5) > a:nth-child(1)
                 self.contact_cache.append(Contact
                                           (first_name=firstname,
+                                           id=id,
                                            last_name=lastname,
-                                           home_phone=homephone,
+                                           home_phone=all_phones_list[0],
+                                           mobile_phone=all_phones_list[1],
+                                           work_phone=all_phones_list[2],
+                                           fax_phone=all_phones_list[3],
                                            email=email))
         list_of_contacts = list(self.contact_cache)
         self.contact_cache = None
@@ -84,3 +104,38 @@ class ContactHelper:
         self.wd.find_element(By.CSS_SELECTOR, 'div.left:nth-child(8) > input:nth-child(1)').click()
         self.switch_to_alert_accept()
         self.open_home_page()
+
+    def open_contact_to_edit_by_index(self, index):
+        self.open_home_page()
+        row = self.wd.find_elements(By.NAME, 'entry')[index]
+        cell = row.find_elements(By.TAG_NAME, 'td')[7]
+        cell.find_element(By.TAG_NAME, 'a').click()
+
+    def open_contact_to_view_by_index(self, index):
+        self.open_home_page()
+        row = self.wd.find_elements(By.NAME, 'entry')[index]
+        cell = row.find_elements(By.TAG_NAME, 'td')[6]
+        cell.find_element(By.TAG_NAME, 'a').click()
+
+    def get_contact_info_from_view_page(self, index):
+        self.open_home_page()
+        self.open_contact_to_view_by_index(index)
+        text = self.wd.find_element(By.ID, "content").text
+        homephone = re.search("H: (.*)", text).group(1)
+        workphone = re.search("W: (.*)", text).group(1)
+        mobilephone = re.search("M:(.*)", text).group(1)
+        fax = re.search("F: (.*)", text).group(1)
+        return Contact(home_phone=homephone, work_phone=workphone,
+                       mobile_phone=mobilephone, fax_phone=fax)
+
+    def get_contact_info_from_edit_page(self, index):
+        self.open_contact_to_edit_by_index(index)
+        contact_obj = Contact()
+        contact_obj.id = self.wd.find_element(By.NAME, 'id').get_attribute('value')
+        contact_obj.first_name = self.wd.find_element(By.NAME, 'firstname').get_attribute('value')
+        contact_obj.last_name = self.wd.find_element(By.NAME, 'lastname').get_attribute('value')
+        contact_obj.home_phone = self.wd.find_element(By.NAME, 'home').get_attribute('value')
+        contact_obj.mobile_phone = self.wd.find_element(By.NAME, 'mobile').get_attribute('value')
+        contact_obj.work_phone = self.wd.find_element(By.NAME, 'work').get_attribute('value')
+        contact_obj.fax_phone = self.wd.find_element(By.NAME, 'fax').get_attribute('value')
+        return contact_obj

@@ -5,6 +5,7 @@ import time
 
 from selenium.webdriver.common.by import By
 from model.group import Group
+import random
 
 
 class GroupHelper:
@@ -25,7 +26,7 @@ class GroupHelper:
         self.open_groups_page()
         self.wd.find_element(By.NAME, 'new').click()
         self.fill_group_form(group_obj)
-        self.wd.find_element(By.NAME, 'submit').click()
+        #self.wd.find_element(By.NAME, 'submit').click()
         self.group_cache = None
 
     def fill_group_form(self, group_obj):
@@ -33,6 +34,7 @@ class GroupHelper:
         self.check_mod_field("group_name", group_obj.name)
         self.check_mod_field("group_header", group_obj.header)
         self.check_mod_field('group_footer', group_obj.footer)
+        self.wd.find_element(By.NAME, 'submit').click()
 
     def check_mod_field(self, field_name, text):
         if text is not None:
@@ -76,6 +78,10 @@ class GroupHelper:
         self.wd.find_element(By.NAME, 'delete').click()
         self.open_groups_page()
         self.group_cache = None
+
+    def delete_amount_of_groups(self, number):
+        for i in range(0, number):
+            self.delete_group_by_index(random.randrange(0, number))
 
     group_cache = None
 

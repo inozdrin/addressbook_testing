@@ -11,9 +11,19 @@ from fixture.groups import GroupHelper
 
 
 class Application:
-    def __init__(self):
-        self.wd = webdriver.Chrome(executable_path="C:\\Chromedriver\\chromedriver.exe")
-        # self.wd.implicitly_wait(10)
+    def __init__(self, browser='chrome'):
+        # self.wd = webdriver.browser
+        if browser == 'firefox':
+            self.wd = webdriver.Firefox(executable_path="C:\\SeleniumWebdrivers\\geckodriver.exe")
+        elif browser == 'edge':
+            self.wd == webdriver.Edge(executable_path="C:\\SeleniumWebdrivers\\msedgedriver.exe")
+            # self.wd == webdriver.Edge()
+        elif browser == 'chrome':
+            self.wd = webdriver.Chrome(executable_path="C:\\Chromedriver\\chromedriver.exe")
+        else:
+            raise ValueError('Could not recognize %s!' % browser)
+        #self.wd = webdriver.Firefox()
+        #self.wd.implicitly_wait(10)
         self.session = SessionHelper(self)
         self.contact = ContactHelper(self)
         self.group = GroupHelper(self)

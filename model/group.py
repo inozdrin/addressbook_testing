@@ -15,7 +15,7 @@ class Group:
         self.id = id
 
     def __repr__(self):
-        return "%s:%s" % (self.id, self.name)
+        return "%s:%s:%s:%s" % (self.id, self.name, self.header, self.footer)
 
     def __eq__(self, other):  # Rules to compare elements(groups in this case ) in two lists
         return self.id is None or other.id is None or self.id == other.id
